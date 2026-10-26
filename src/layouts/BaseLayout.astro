@@ -1,0 +1,95 @@
+---
+import { getImage } from 'astro:assets';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ElfsightWidget from '../components/ElfsightWidget.astro';
+import { elfsight, site } from '../data/site';
+import texture from '../assets/images/texture-leaves.png';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const pageTitle = title ? `${title} | ${site.name}` : site.name;
+const bg = await getImage({ src: texture, width: 1024, format: 'webp' });
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@400;700&family=Poppins:wght@600;700&display=swap"
+    />
+  </head>
+  <body class="flex min-h-screen flex-col" style={`background-image: url(${bg.src}); background-size: 640px;`}>
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+    <ElfsightWidget appId={elfsight.whatsappChat} />
+
+    <script>
+      // Load Elfsight widgets once the page is idle, so their setup doesn't land on the first scroll.
+      const loadElfsight = () => {
+        const s = document.createElement('script');
+        s.src = 'https://elfsightcdn.com/platform.js';
+        s.async = true;
+        document.body.append(s);
+      };
+      const whenIdle = () =>
+        'requestIdleCallback' in window ? requestIdleCallback(loadElfsight, { timeout: 3000 }) : setTimeout(loadElfsight, 1500);
+
+      if (document.readyState === 'complete') whenIdle();
+      else addEventListener('load', whenIdle, { once: true });
+    </script>
+
+    <script>
+      // Parallax fallback for browsers without CSS scroll-driven animations (see global.css).
+      const images = document.querySelectorAll<HTMLElement>('[data-parallax]');
+
+      if (
+        images.length &&
+        !CSS.supports('animation-timeline: scroll()') &&
+        !matchMedia('(prefers-reduced-motion: reduce)').matches
+      ) {
+        let ticking = false;
+
+        const update = () => {
+          ticking = false;
+          for (const img of images) {
+            const { top, bottom } = img.parentElement!.getBoundingClientRect();
+            if (bottom < 0) continue;
+            img.style.transform = `translate3d(0, ${Math.max(0, -top) * 0.5}px, 0)`;
+          }
+        };
+
+        addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(update);
+            }
+          },
+          { passive: true },
+        );
+        update();
+      }
+    </script>
+  </body>
+</html>

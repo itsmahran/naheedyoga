@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import DetailList from '../components/DetailList.astro';
+import { whatsappLink } from '../data/site';
+import hero from '../assets/images/hero-home.jpg';
+
+const classes = (await getCollection('classes', ({ data }) => data.bookOrder !== undefined)).sort(
+  (a, b) => a.data.bookOrder! - b.data.bookOrder!,
+);
+---
+
+<BaseLayout title="Book Now" description="Book a group, private, prenatal yoga session or a naturopathic consult at Naheed Yoga, Riyadh.">
+  <PageHero title="book now" image={hero} />
+
+  <section class="mx-auto max-w-5xl px-4 py-16">
+    <ul class="grid gap-8 sm:grid-cols-2">
+      {
+        classes.map(({ data }) => (
+          <li class="flex flex-col overflow-hidden rounded-xl bg-white shadow-md">
+            {data.cardImage && (
+              <Image src={data.cardImage} alt="" widths={[400, 800]} sizes="(min-width: 640px) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" />
+            )}
+            <div class="flex flex-1 flex-col gap-4 p-6">
+              <h2 class="text-2xl font-bold">{data.title}</h2>
+              <DetailList
+                items={[
+                  ['Focus', data.focus],
+                  ['Schedule', `${data.time} · ${data.days}`],
+                  ['Price', data.price],
+                ]}
+              />
+              <div class="mt-auto pt-2">
+                <Button href={whatsappLink(`Hello Naheed, I'd like to book ${data.title}.`)}>Book Now</Button>
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

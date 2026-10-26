@@ -1,0 +1,23 @@
+---
+import { site, whatsappLink } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-forest-dark text-mint">
+  <div class="mx-auto grid max-w-6xl gap-6 px-4 py-12 text-sm sm:grid-cols-2">
+    <p>
+      <strong class="text-white">Naheed Yoga Studio</strong> | <em>{site.tagline}</em>
+    </p>
+    <div class="space-y-1 sm:text-right">
+      <p>
+        <strong class="text-white">Contact Us</strong>
+        <a href={whatsappLink()} class="ml-2 underline hover:text-white">{site.phone}</a>
+      </p>
+      <p>
+        <a href={site.mapUrl} target="_blank" rel="noopener" class="hover:text-white">📍 {site.address}</a>
+      </p>
+    </div>
+    <p class="text-mint/70 sm:col-span-2">© {year} {site.name}. All Rights Reserved.</p>
+  </div>
+</footer>

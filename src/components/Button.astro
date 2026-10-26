@@ -1,0 +1,21 @@
+---
+interface Props {
+  href: string;
+  variant?: 'solid' | 'light';
+  external?: boolean;
+}
+
+const { href, variant = 'solid', external = href.startsWith('http') } = Astro.props;
+---
+
+<a
+  href={href}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener' : undefined}
+  class:list={[
+    'inline-block rounded-full px-7 py-2.5 text-sm font-semibold tracking-wide transition-colors',
+    variant === 'solid' ? 'bg-forest text-white hover:bg-forest-dark' : 'bg-white text-forest hover:bg-mint',
+  ]}
+>
+  <slot />
+</a>

@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import hero from '../assets/images/hero-about.png';
+import naheed from '../assets/images/naheed.png';
+import meditation from '../assets/images/about-meditation.png';
+import wellness from '../assets/images/about-wellness.png';
+
+const highlights = [
+  ['6+ Years of Experience', 'Leading private and online sessions in Riyadh.'],
+  [
+    'A Holistic Approach',
+    'My sessions go beyond movement. I incorporate breathwork, mindfulness, and herbal guidance for issues like stress, sleep, and digestion.',
+  ],
+  [
+    'Empowering the Next Generation',
+    "I specialize in kids' coaching, using yoga-based tools to build confidence and emotional grounding for exam preparation and growth.",
+  ],
+];
+
+const certifications = ['Yoga Instructor (AVIVOG)', 'Naturopathy Practitioner (Naturalistico)'];
+const specialties = ['Therapeutic Yoga & Pranayama', 'Women’s Hormonal Health', 'Kids’ Academic Mentorship'];
+---
+
+<BaseLayout title="About" description="Meet Naheed: certified yoga instructor and naturopathy practitioner with 6+ years of experience in Riyadh.">
+  <PageHero title="a sanctuary in the heart of riyadh" image={hero} />
+
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-[2fr_3fr]">
+    <Image src={naheed} alt="Naheed" widths={[480, 960]} sizes="(min-width: 768px) 40vw, 100vw" class="w-full rounded-lg object-cover shadow-lg" />
+    <div class="space-y-4">
+      <h2 class="text-4xl font-bold">Naheed</h2>
+      {
+        highlights.map(([title, text]) => (
+          <p>
+            <strong class="text-forest">{title}:</strong> {text}
+          </p>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="bg-white/60 py-16">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 md:grid-cols-2">
+      <div class="flex items-start gap-6">
+        <Image src={meditation} alt="" width={130} height={130} class="size-28 shrink-0 rounded-full object-cover shadow" />
+        <div>
+          <h3 class="text-2xl font-bold">Certifications</h3>
+          <ul class="mt-3 list-disc space-y-1 pl-5">
+            {certifications.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+      <div class="flex items-start gap-6">
+        <Image src={wellness} alt="" width={130} height={130} class="size-28 shrink-0 rounded-full bg-white object-contain shadow" />
+        <div>
+          <h3 class="text-2xl font-bold">Specialties</h3>
+          <ul class="mt-3 list-disc space-y-1 pl-5">
+            {specialties.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

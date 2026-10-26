@@ -1,0 +1,17 @@
+---
+interface Props {
+  items: [label: string, value: string | undefined][];
+}
+
+const items = Astro.props.items.filter(([, value]) => value);
+---
+
+<dl class="space-y-1.5 text-sm">
+  {
+    items.map(([label, value]) => (
+      <div>
+        <dt class="inline font-semibold text-forest">{label}:</dt> <dd class="inline">{value}</dd>
+      </div>
+    ))
+  }
+</dl>

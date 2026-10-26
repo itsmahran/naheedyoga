@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import DetailList from '../components/DetailList.astro';
+import { whatsappLink } from '../data/site';
+import hero from '../assets/images/hero-classes.png';
+
+const classes = await Promise.all(
+  (await getCollection('classes'))
+    .sort((a, b) => a.data.order - b.data.order)
+    .map(async (entry) => ({ ...entry, Content: (await render(entry)).Content })),
+);
+---
+
+<BaseLayout title="Classes" description="Group yoga flow, private healing yoga, prenatal yoga, kids' yoga and naturopathic consulting in Riyadh.">
+  <PageHero title="classes" image={hero} />
+
+  <div class="mx-auto max-w-6xl space-y-20 px-4 py-16">
+    {
+      classes.map(({ id, data, Content }, i) => (
+        <section
+          id={id}
+          class:list={['grid scroll-mt-24 items-center gap-10', i % 2 ? 'md:grid-cols-[3fr_2fr]' : 'md:grid-cols-[2fr_3fr]']}
+        >
+          <Image
+            src={data.image}
+            alt=""
+            widths={[480, 960]}
+            sizes="(min-width: 768px) 40vw, 100vw"
+            class:list={['w-full rounded-lg object-cover shadow-lg', i % 2 && 'md:order-last']}
+          />
+          <div class="space-y-4">
+            <h2 class="text-3xl font-bold sm:text-4xl">{data.title}</h2>
+            <div class="leading-relaxed">
+              <Content />
+            </div>
+            <DetailList
+              items={[
+                ['When', data.days],
+                ['Time', data.time],
+                ['Investment', data.investment],
+                ['Location', data.location],
+              ]}
+            />
+            <Button href={whatsappLink(`Hello Naheed, I'd like to book ${data.title}.`)}>Book Now</Button>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

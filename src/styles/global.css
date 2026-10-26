@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #205140;
+  --color-forest-dark: #1a4133;
+  --color-mint: #d9ead3;
+  --color-cream: #f8f8f4;
+  --color-ink: #2b2f2d;
+
+  --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-hero: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream font-sans text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-forest;
+  }
+}
+
+/*
+ * Parallax: hero images scroll at half speed. Scroll-driven animations run on
+ * the compositor, so they stay smooth while scripts load. Heroes sit directly
+ * under the 68px header; browsers without support use the script in BaseLayout.
+ */
+@keyframes parallax {
+  to {
+    transform: translate3d(0, 500px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    [data-parallax] {
+      animation: parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 68px 1068px;
+    }
+  }
+}

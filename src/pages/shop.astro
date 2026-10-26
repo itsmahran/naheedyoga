@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import DetailList from '../components/DetailList.astro';
+import { whatsappLink } from '../data/site';
+import hero from '../assets/images/hero-shop.jpg';
+
+const products = await Promise.all(
+  (await getCollection('products'))
+    .sort((a, b) => a.data.order - b.data.order)
+    .map(async (entry) => ({ ...entry, Content: (await render(entry)).Content })),
+);
+---
+
+<BaseLayout title="Shop" description="Herbal teas and Ayurvedic blends from Naheed Yoga, available for pickup in Riyadh or local delivery.">
+  <PageHero title="shop" image={hero} />
+
+  <div class="mx-auto max-w-5xl space-y-12 px-4 py-16">
+    {
+      products.map(({ id, data, Content }) => (
+        <section
+          id={id}
+          class:list={[
+            'grid scroll-mt-24 items-center gap-8 rounded-xl bg-white p-6 shadow-md sm:p-8',
+            (data.image || data.driveVideoId) && 'md:grid-cols-[2fr_3fr]',
+          ]}
+        >
+          {data.driveVideoId ? (
+            <div class="aspect-video w-full overflow-hidden rounded-lg bg-black">
+              <iframe
+                src={`https://drive.google.com/file/d/${data.driveVideoId}/preview`}
+                title={`${data.title} video`}
+                allow="autoplay; fullscreen"
+                allowfullscreen
+                loading="lazy"
+                class="size-full border-0"
+              />
+            </div>
+          ) : data.image && (
+            <Image src={data.image} alt={data.title} widths={[400, 800]} sizes="(min-width: 768px) 40vw, 100vw" class="w-full rounded-lg object-cover" />
+          )}
+          <div class="space-y-4">
+            <h2 class="text-3xl font-bold">{data.title}</h2>
+            <div class="leading-relaxed">
+              <Content />
+            </div>
+            <DetailList
+              items={[
+                ['Ingredients', data.ingredients],
+                ['Size', data.size],
+                ['Investment', data.price],
+                ['How to Buy', data.howToBuy],
+              ]}
+            />
+            <Button href={whatsappLink(`Hello Naheed, I'd like to order ${data.title}.`)}>Buy Now</Button>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

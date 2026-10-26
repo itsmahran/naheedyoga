@@ -1,0 +1,10 @@
+---
+// Placeholder for an Elfsight app; BaseLayout loads the platform script once the page is idle.
+interface Props {
+  appId: string;
+}
+
+const { appId } = Astro.props;
+---
+
+<div class={`elfsight-app-${appId}`}></div>

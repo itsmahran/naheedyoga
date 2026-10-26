@@ -1,0 +1,96 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import ElfsightWidget from '../components/ElfsightWidget.astro';
+import { elfsight, site } from '../data/site';
+import hero from '../assets/images/hero-home.jpg';
+import studio from '../assets/images/studio.png';
+import offerGroup from '../assets/images/offer-group.png';
+import offerPrivate from '../assets/images/offer-private.png';
+import offerConsult from '../assets/images/offer-consult.png';
+
+const offers = [
+  {
+    title: 'Group Flow Sessions',
+    text: 'Gentle, breath-led classes in a calm group setting for all levels. Offered online or physically at our studio.',
+    image: offerGroup,
+  },
+  {
+    title: 'One-on-One Healing Yoga',
+    text: 'Private sessions tailored to your pace and needs. Held in-person or online, your space, your rhythm.',
+    image: offerPrivate,
+  },
+  {
+    title: 'Holistic Wellness Consult',
+    text: 'Natural support for stress, digestion, hormones & more. Personalized consults, online or in studio.',
+    image: offerConsult,
+  },
+];
+---
+
+<BaseLayout>
+  <section class="relative isolate flex h-[85vh] max-h-[760px] min-h-[520px] flex-col items-center justify-center overflow-hidden px-4 text-center">
+    <Image src={hero} alt="" widths={[640, 1280, 1920]} sizes="100vw" quality={65} loading="eager" data-parallax class="absolute inset-0 -z-10 size-full object-cover will-change-transform" />
+    <div class="absolute inset-0 -z-10 bg-black/30"></div>
+    <div class="border-4 border-white/90 px-5 py-4 sm:px-12 sm:py-8 lg:px-24">
+      <h1 class="font-hero text-[clamp(2.5rem,11vw,8.5rem)] leading-none font-bold whitespace-nowrap text-mint">naheed yoga</h1>
+    </div>
+    <p class="mt-10 text-2xl font-semibold text-mint sm:text-3xl">wellness &amp; yoga training studio</p>
+    <p class="mt-4 font-semibold text-mint">become the best version of yourself</p>
+  </section>
+
+  <div class="bg-forest py-6 text-center">
+    <Button href="/book-now" variant="light">Book Now</Button>
+  </div>
+
+  <p class="mx-auto max-w-3xl px-4 py-12 text-center text-lg">
+    Naheed Yoga is a soft space for inner calm, flexibility, and healing through movement, stillness, and breath.
+  </p>
+
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-20 md:grid-cols-[2fr_3fr]">
+    <figure>
+      <a href={site.mapUrl} target="_blank" rel="noopener" class="block overflow-hidden rounded-lg shadow-lg">
+        <Image src={studio} alt="Inside the Naheed Yoga studio" widths={[480, 960]} sizes="(min-width: 768px) 40vw, 100vw" class="transition-transform duration-500 hover:scale-105" />
+      </a>
+      <figcaption class="mt-2 text-center text-sm italic">Click the image for our location</figcaption>
+    </figure>
+    <div class="space-y-4">
+      <h2 class="text-4xl font-bold">Our Studio</h2>
+      <p>
+        Tucked away in a quiet corner of the city, our studio is a light filled, private sanctuary designed for presence, stillness, and
+        movement. With a clean, minimalist aesthetic and calming greenery, the space invites you to leave the outside world behind, soften
+        your shoulders, and reconnect with your breath.
+      </p>
+      <p>
+        Whether you are joining us for a gentle flow, restorative breathwork, or a personalized healing session, our studio provides a
+        soft, temperature controlled environment where you can focus entirely on your well being.
+      </p>
+      <p class="italic">A space that holds you, just as you are.</p>
+    </div>
+  </section>
+
+  <section class="bg-white/60 py-20">
+    <div class="mx-auto max-w-6xl px-4">
+      <h2 class="mb-12 text-center text-4xl font-bold">What We Offer</h2>
+      <ul class="grid gap-10 md:grid-cols-3">
+        {
+          offers.map((offer) => (
+            <li class="text-center">
+              <Image src={offer.image} alt="" widths={[400, 800]} sizes="(min-width: 768px) 33vw, 100vw" class="aspect-square w-full rounded-lg object-cover shadow-md" />
+              <h3 class="mt-5 text-2xl font-bold">{offer.title}</h3>
+              <p class="mt-2">{offer.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-12 text-center">
+        <Button href="/classes">Explore Classes</Button>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="What Our Clients Say" class="mx-auto max-w-5xl px-4 py-20">
+    <ElfsightWidget appId={elfsight.googleReviews} />
+  </section>
+</BaseLayout>
